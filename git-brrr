@@ -1,4 +1,10 @@
 #!/bin/sh
 
-DEFAULT_BRANCH=$(git config init.defaultBranch)
-git branch --merged | egrep -v "(^\*|master|main|$DEFAULT_BRANCH)" | xargs git branch -d
+DEFAULT_BRANCH=`git config init.defaultBranch`
+PROTECTED_BRANCHES=`git config brrr.protectedBranches`
+if [ -z "$PROTECTED_BRANCHES" ]; then
+    PROTECTED_BRANCHES=$DEFAULT_BRANCH
+else
+    PROTECTED_BRANCHES="$DEFAULT_BRANCH|$PROTECTED_BRANCHES"
+fi
+git branch --merged | egrep -v "(^\*|$PROTECTED_BRANCHES)" | xargs git branch -d
