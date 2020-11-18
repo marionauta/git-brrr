@@ -1,0 +1,4 @@
+#!/bin/sh
+
+DEFAULT_BRANCH=$(git config init.defaultBranch)
+git branch --merged | egrep -v "(^\*|master|main|$DEFAULT_BRANCH)" | xargs git branch -d
