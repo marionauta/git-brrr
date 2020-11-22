@@ -1,10 +1,15 @@
 #!/bin/sh
 
+PROTECTED_BRANCHES="^\*"
+
 DEFAULT_BRANCH=`git config init.defaultBranch`
-PROTECTED_BRANCHES=`git config brrr.protectedBranches`
-if [ -z "$PROTECTED_BRANCHES" ]; then
-    PROTECTED_BRANCHES=$DEFAULT_BRANCH
-else
-    PROTECTED_BRANCHES="$DEFAULT_BRANCH|$PROTECTED_BRANCHES"
+if [ -n "$DEFAULT_BRANCH" ]; then
+    PROTECTED_BRANCHES="$PROTECTED_BRANCHES|$DEFAULT_BRANCH"
 fi
-git branch --merged | egrep -v "(^\*|$PROTECTED_BRANCHES)" | xargs git branch -d
+
+CUSTOM_PROTECTED=`git config brrr.protectedBranches`
+if [ -n "$CUSTOM_PROTECTED" ]; then
+    PROTECTED_BRANCHES="$PROTECTED_BRANCHES|$CUSTOM_PROTECTED"
+fi
+
+git branch --merged | egrep -v "($PROTECTED_BRANCHES)" | xargs git branch -d
