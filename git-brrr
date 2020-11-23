@@ -12,4 +12,4 @@ if [ -n "$CUSTOM_PROTECTED" ]; then
     PROTECTED_BRANCHES="$PROTECTED_BRANCHES|$CUSTOM_PROTECTED"
 fi
 
-git branch --merged | egrep -v "($PROTECTED_BRANCHES)" | xargs git branch -d
+git branch --merged | egrep -v "($PROTECTED_BRANCHES)" | xargs -r git branch -d
